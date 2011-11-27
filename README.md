@@ -1,11 +1,11 @@
 # Run Java worker processes on Heroku
 
-Any business application today has two components to it:
+Some applications can benifit from splitting logic into two components?
 
 1. A web component that is consumed by the end-user
-2. A non-web component to supplement your web component.
+2. A non-web component or background process to supplement the web component.
 
-The non-web component of your application is called a [Worker](http://devcenter.heroku.com/articles/process-model#mapping_the_unix_process_model_to_web_apps) process in Heroku.  This article is going to talk about getting started on the running a Java worker process in your Heroku environment.
+The non-web component of an application is called a [Worker](http://devcenter.heroku.com/articles/process-model#mapping_the_unix_process_model_to_web_apps) process in Heroku.  This article explains the running of a Java worker process on Heroku.
 
 ## Prerequisites
 
@@ -17,19 +17,18 @@ The non-web component of your application is called a [Worker](http://devcenter.
 
 A java worker process on Heroku comprises of 4 parts:
 
-1. Your application code that you want executed as a worker
-2. Your application code dependencies
-3. How to assemble your application with Maven
-4. How to invoke your worker using the Procfile
+1. Application code
+2. A maven build file (pom.xml) that defines how the application will be built along with which dependencies are required
+3. A Procfile defining how the process is launched
 
-## Create an application if you don't already have one
+## Create an application
 
-To start, we need a simple Java project. You can create this using the mvn:create archetype.
+Create a simple Java application using mvn archetype:create:
 
     :::term
     $ mvn archetype:create -DgroupId=com.myexamples -DartifactId=herokujavaworker
 
-This should create the project directories, your "pom.xml" and the associated test directories. This creates folder structure below:
+This will create the project directories, "pom.xml" and the associated test directories. This folder structure will look like:
 
     project
     ¦   pom.xml
@@ -48,7 +47,7 @@ This should create the project directories, your "pom.xml" and the associated te
     ¦                       AppTest.java
 
 
-It creates class called App.java that would be the main entry point for your application. You can change/remove/rename this to any specific naming convention that you follow. Here's a quick look at the App.java that maven creates:
+A class called App.java is also created. This is the main entry point for the application. The App.java that maven creates will look like:
 
     :::java
     package com.myexamples;
@@ -68,21 +67,9 @@ It creates class called App.java that would be the main entry point for your app
 
 ## Configure Maven
 
-You can now open your pom.xml and add any dependencies to your Java application. In addition to your dependencies you also should add the [maven appassembler](http://mojo.codehaus.org/appassembler/appassembler-maven-plugin/) plugin to your pom.xml.
+Add the [maven appassembler](http://mojo.codehaus.org/appassembler/appassembler-maven-plugin/) plugin to the pom.xml:
 
-    <build>
-      <plugins>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>2.3.2</version>
-            <configuration>
-                <source>${java-version}</source>
-                <target>${java-version}</target>
-            </configuration>
-        </plugin>    
-        <!-- The maven app assembler plugin will generate a script that sets up the classpath and runs your project -->
-        <plugin>
+    <plugin>
           <groupId>org.codehaus.mojo</groupId>
     	    <artifactId>appassembler-maven-plugin</artifactId>
     	    <version>1.1.1</version>
@@ -106,8 +93,8 @@ You can now open your pom.xml and add any dependencies to your Java application.
         		</execution>  			
         	</executions>
         </plugin>
-      </plugins>
-    </build>
+
+
 
 If you have renamed App.java or are using a different class as your main entry point, make sure you change the "mainClass" parameter above to reflect the fully qualified name of that class.
 
