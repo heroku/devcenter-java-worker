@@ -95,12 +95,13 @@ Add the [maven appassembler](http://mojo.codehaus.org/appassembler/appassembler-
         </plugin>
 
 
+The app assembler plugin generates a convenient launch script for starting your application.
 
-If you have renamed App.java or are using a different class as your main entry point, make sure you change the "mainClass" parameter above to reflect the fully qualified name of that class.
+Note that the mainClass tag points to the class that launches the application. In the application described above that is App.java, but it would need to be changed for another application.
 
-You are now ready to add any additional business logic to your application. 
+Now that the application is ready to be run as a worker any other business logic can be added as long as it is bootstrapped from the main class. 
 
-## Run your Application
+## Run the Application
 
 To build your application simply run:
 
