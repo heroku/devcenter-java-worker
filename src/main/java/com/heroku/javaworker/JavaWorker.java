@@ -6,7 +6,7 @@ package com.heroku.javaworker;
  */
 public class JavaWorker 
 {
-    public static void main( String[] args )
+    public static void main( String[] args ) throws InterruptedException
     {
 
         while(true){
