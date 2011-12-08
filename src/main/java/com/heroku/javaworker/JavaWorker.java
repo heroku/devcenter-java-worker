@@ -1,4 +1,4 @@
-package com.myexamples;
+package com.heroku.javaworker;
 
 /**
  * Java worker
@@ -8,26 +8,12 @@ public class JavaWorker
 {
     public static void main( String[] args )
     {
-        try{
 
-            //initializeApplication
+        while(true){
 
-            while(true){
+        	System.out.println("worker application running...");
+        	Thread.sleep(1000);
 
-                //getTriggeringEvent
-
-                //performApplicationLogic
-
-            }
-        }catch(RuntimeException ex){
-
-            //tryToHandleTheError
-
-            //If error is not expected
-            //System.exit(APP_ERROR_CODE);
-
-        }finally{
-            //Do any aplication cleanup (closing db connections etc.)
         }
     }    
 

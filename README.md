@@ -266,6 +266,7 @@ If your process is a worker you can now scale it using a command like this:
 
 <div class="callout" markdown="1">
 By scaling your workers you can now have more listeners and thereby consume and process more messages simultaneously.
+</div>
 
 #### Admin processes
 
