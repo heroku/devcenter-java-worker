@@ -258,14 +258,14 @@ Deploy your code:
 
 #### Worker processes
 
-If your process is a worker you can now scale it using a command like this:
+If your process is a worker you can now start and scale it using a command like this:
 
     :::term
-    $ heroku scale worker=5
-    Scaling worker processes... done, now running 5
+    $ heroku scale worker=1
+    Scaling worker processes... done, now running 1
 
 <div class="callout" markdown="1">
-By scaling your workers you can now have more listeners and thereby consume and process more messages simultaneously.
+By scaling your workers to more than one dyno you can have more listeners and thereby consume and process more messages simultaneously.
 </div>
 
 #### Admin processes
