@@ -1,2 +1,2 @@
-worker: sh target/bin/java-worker.sh
-admin: sh target/bin/scheduled-java.sh
+worker: sh target/bin/java-worker
+admin: sh target/bin/scheduled-java
