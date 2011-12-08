@@ -1,11 +1,11 @@
 # Run non-web Java application on Heroku
 
-Some applications can benifit from splitting logic into two components:
+Some applications can benifit from splitting logic into multiple components:
 
 1. A web component that is consumed by the end-user
-2. A non-web component or background process to supplement the web component.
+2. One or more non-web component or background process to supplement the web component.
 
-The non-web component of your application can be executed in three different contexts within Heroku:
+A non-web component of your application can be executed in three different contexts within Heroku:
 
 1. A long running application called a [Worker](http://devcenter.heroku.com/articles/process-model#mapping_the_unix_process_model_to_web_apps), that is waiting on events (either on a database or from a message queue)
 2. A scheduled Java application that is invoked through the [Heroku Scheduler](http://addons.heroku.com/scheduler)
@@ -49,7 +49,7 @@ This should create the project directories, your "pom.xml" and the associated te
                     └───myexamples
 
 
-A class called `App.Java` is also created which serves as the main entry point for your application. You can choose to add other Java classes that would be the main entry point for your application.
+A class called `App.Java` with a main method is also created which serves as the main entry point for your application.
 
 ## Worker processes on Heroku
 
@@ -90,9 +90,12 @@ For your application to run as a "worker" process your  Java class would look li
         }    
     
     }
+
+The important thing to note here is that the application doesn't exit. Under normal circumstances worker processes should continue to run.
+
 ## Scheduled and one off admin processes on Heroku
 
-For your application to run as a scheduled or one off admin process your  Java class would look like:
+For your application to run as a scheduled or one off admin process your Java class would look like:
 
     :::java
     package com.heroku.javaworker;
@@ -166,6 +169,8 @@ You can now open your `pom.xml` and add any dependencies to your Java applicatio
 The app assembler plugin generates a convenient launch script for starting your application.
 
 Note that the mainClass tag points to the class that launches the application. In the application described above that is `JavaWorker.java`, but it would need to be changed for another application.
+
+As shown above a single `pom.xml` can define multiple worker, scheduled, or admin processes.
 
 Now that the application is ready to be run as a worker any other business logic can be added as long as it is bootstrapped from the main class. 
 
@@ -249,18 +254,39 @@ Deploy your code:
     -----> Launching... done, v5
        http://empty-fire-9222.herokuapp.com deployed to Heroku
 
-Congratulations! Your  app should now be up and running on Heroku. To look at the application logs, run the command:
+### Running your processes on Heroku
+
+#### Worker processes
+
+If your process is a worker you can now start and scale it using a command like this:
 
     :::term
-    $ heroku logs --tail
+    $ heroku scale worker=1
+    Scaling worker processes... done, now running 1
 
-### Scaling your workers
+<div class="callout" markdown="1">
+By scaling your workers to more than one dyno you can have more listeners and thereby consume and process more messages simultaneously.
+</div>
 
-You can now scale your worker process using the command:
+#### Admin processes
+
+If your process is a one-off admin process that you wish to run manually on an as needed basis you can do so with the `heroku run` command:
 
     :::term
-    $ heroku scale worker=5
+    $ heroku run admin
+    Running admin attached to terminal...
 
-__*Note*__:
-Scaling your worker process is beneficial only when your worker is a long running Java application that is listening on events. A good example of this is a worker process that's listening for messages on a message queue (e.g. Redis, Rabbit MQ etc.). By scaling your workers you can now have more listeners and thereby consume and process more messages simultaneously.
+#### Scheduled processes
 
+Scheduled processes can be run with the [scheduler add-on](http://addons.heroku.com/scheduler). Start by adding the scheduler add-on to your application:
+
+    :::term
+    $ heroku addons:add scheduler
+    -----> Adding scheduler to strong-night-1577... done, v4 (free)
+
+Then you can manage your scheduled tasks from the scheduler web console. Open the web console:
+
+    :::term
+    $ heroku addons:open scheduler
+
+The web console will allow you to specify the name of your scheduled process and the frequency with which you'd like it to run.
