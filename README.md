@@ -142,8 +142,8 @@ Commit your changes to Git:
 Create the app on the Cedar stack:
 
     :::term
-    $ heroku create --stack cedar
-    Creating empty-fire-9222... done, stack is cedar
+    $ heroku create
+    Creating empty-fire-9222... done, stack is heroku-22
     http://empty-fire-9222.herokuapp.com/ | git@heroku.com:empty-fire-9222.git
     Git remote heroku added
 
